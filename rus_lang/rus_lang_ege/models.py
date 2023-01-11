@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
 from django.db import models
-
+from django.urls import reverse_lazy, reverse
 
 User = get_user_model()
 
@@ -18,10 +18,13 @@ class Level(models.Model):
         help_text="Введите класс или экзамен",
         max_length=150,
     )
-    test = models.ManyToManyField(
-        "Test",
-        related_name="level"
-    )
+
+    def __str__(self) -> str:
+        return self.number_of_class
+
+    def get_absolute_url(self):
+        return reverse_lazy('rus_lang_ege:test_page',
+                            kwargs={"grade_id": self.id})
 
     class Meta:
         verbose_name = "Класс"
@@ -34,9 +37,20 @@ class Test(models.Model):
         help_text="Введите название теста или его номер",
         max_length=200
     )
+    grade = models.ForeignKey(
+        "Level",
+        verbose_name="Класс",
+        help_text="Вы не можете удалить класс,пока у него есть тесты",
+        on_delete=models.PROTECT
+    )
 
     def __str__(self) -> str:
         return self.title
+
+    def get_absolute_url(self):
+        return reverse_lazy('rus_lang_ege:question_page',
+                            kwargs={'test_id': self.id,
+                                    'grade_id': self.grade.id})
 
     class Meta:
         verbose_name = "Тест"
@@ -59,7 +73,10 @@ class Question(models.Model):
 
     def __str__(self):
         return self.question_text
-    
+
+    def get_absolute_url(self):
+        pass
+
     class Meta:
         verbose_name = "Вопрос"
         verbose_name_plural = "Вопросы"
@@ -122,6 +139,7 @@ class QuestionInLine(admin.TabularInline):
 @admin.register(Question)
 class BookAdmin(admin.ModelAdmin):
     inlines = [QuestionInLine]
+    list_display = ('id', 'question_text', "correct_answer_count", "test")
 
 
 class TestInline(admin.TabularInline):
@@ -131,3 +149,4 @@ class TestInline(admin.TabularInline):
 @admin.register(Test)
 class TestCreateAdmin(admin.ModelAdmin):
     inlines = [TestInline]
+    list_display = ('id', 'title', 'grade')

@@ -1,0 +1,13 @@
+{% extends 'rus_lang_ege/base.html' %}
+{% block title %} Страница с классами {% endblock %}
+{% block content %}
+{% for level in object_list %}
+    <div class="card" style="width: 18rem;">
+        {% comment %} <img src="..." class="card-img-top" alt="..."> {% endcomment %}
+        <div class="card-body">
+        <p class="card-text"><a href="{{ level.get_absolute_url }}"> {{ level }}</a></p>
+        </div>
+    </div>
+
+{% endfor %}
+{% endblock content %}
