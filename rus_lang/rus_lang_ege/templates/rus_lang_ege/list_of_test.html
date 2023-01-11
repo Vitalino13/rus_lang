@@ -1,0 +1,13 @@
+{% extends 'rus_lang_ege/base.html' %}
+{% block title %} Страница с тестами {% endblock %}
+{% block content %}
+{% for test in test_list %}
+    <div class="card" style="width: 18rem;">
+        {% comment %} <img src="..." class="card-img-top" alt="..."> {% endcomment %}
+        <div class="card-body">
+        <p class="card-text"><a href={{ test.get_absolute_url }}> {{ test.title }}</a></p>
+        </div>
+    </div>
+
+{% endfor %}
+{% endblock content %}
