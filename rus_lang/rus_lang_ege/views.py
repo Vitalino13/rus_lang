@@ -1,7 +1,9 @@
-from django.views.generic import ListView, FormView
-from django.shortcuts import get_object_or_404, render
-from .models import Level, Test, Question, Answer
-from pprint import pprint
+from django.views.generic import ListView
+from django.shortcuts import render
+from .models import Level, Test, Question
+
+
+from .utils import check_answer, convert_to_dict, remove_token_key
 
 
 class IndexPageList(ListView):
@@ -29,14 +31,14 @@ class TestPageList(ListView):
 
 
 def vote(request, test_id):
-    list_of_question = [q.id for q in Question.objects.filter(test=test_id)]
-    answers = {}
-    question = Question.objects.get(id=list_of_question[0]).answer_set.all()
-    for ans in question:
-        ans.is_right
-    print(list_of_question)
-    answer = dict(request.POST)
-    del answer['csrfmiddlewaretoken']
-    print(answer)
+    list_of_question = [q for q in Question.objects.filter(
+        test=test_id).values_list(
+            'id', "answers__id", "answers__is_right")]
+    response = list(request.POST.lists())
+    response = remove_token_key(response)
+    dict_of_question = convert_to_dict(list_of_question)
+    message = "sgds"
+    message = check_answer(response, dict_of_question)
+    context = {'message': message}
     return render(request,
-                  "rus_lang_ege/list_of_question.html")
+                  "rus_lang_ege/results.html", context=context)

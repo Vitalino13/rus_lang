@@ -13,7 +13,7 @@
       <form action ="{% url 'rus_lang_ege:vote' question.test.id %}" method ="post">
         {% csrf_token %}
         {% if question.correct_answer_count == 1 %}
-          {% for answer in question.answer_set.all %}
+          {% for answer in question.answers.all %}
             <div class ="form-check">
               <input type ="radio" name ="{{ question.id }}" class ="form-check-input" id ="{{ question.id }}"
               value ="{{ answer.id }}" />
@@ -21,7 +21,7 @@
             </div>
           {% endfor %}
         {% else %}
-        {% for answer in question.answer_set.all %}
+        {% for answer in question.answers.all %}
         <div class ="form-check">
           <input type ="checkbox" name ="{{ question.id }}" class ="form-check-input" id ="{{ question.id }}"
           value ="{{ answer.id }}" />

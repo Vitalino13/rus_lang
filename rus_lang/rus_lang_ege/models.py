@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
 from django.db import models
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 
 User = get_user_model()
 
@@ -92,6 +92,7 @@ class Answer(models.Model):
     question = models.ForeignKey(
         "Question",
         on_delete=models.CASCADE,
+        related_name="answers"
     )
     is_right = models.BooleanField(
         verbose_name="Правильный ответ",
