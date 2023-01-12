@@ -10,12 +10,12 @@
       </p>
       {% endif %}
       
-      <form action ="{% url 'rus_lang_ege:vote' question.id %}" method ="post">
+      <form action ="{% url 'rus_lang_ege:vote' question.test.id %}" method ="post">
         {% csrf_token %}
         {% if question.correct_answer_count == 1 %}
           {% for answer in question.answer_set.all %}
             <div class ="form-check">
-              <input type ="radio" name ="answer" class ="form-check-input" id ="answer{{ forloop.counter }}"
+              <input type ="radio" name ="{{ question.id }}" class ="form-check-input" id ="{{ question.id }}"
               value ="{{ answer.id }}" />
               <label for ="choice{{ forloop.counter }}">{{ answer.answer_text }}</label>
             </div>
@@ -23,16 +23,16 @@
         {% else %}
         {% for answer in question.answer_set.all %}
         <div class ="form-check">
-          <input type ="checkbox" name ="answer" class ="form-check-input" id ="answer{{ forloop.counter }}"
+          <input type ="checkbox" name ="{{ question.id }}" class ="form-check-input" id ="{{ question.id }}"
           value ="{{ answer.id }}" />
           <label for ="choice{{ forloop.counter }}">{{ answer.answer_text }}</label>
         </div>
         {% endfor %}
         {% endif %}
-        </form>
+        {% endfor %}
+        <input type ="submit" value ="Vote" class ="btn btn-success btn-lg btn-block mt-4" />
       </div>
-      {% endfor %}
-      <input type ="submit" value ="Vote" class ="btn btn-success btn-lg btn-block mt-4" />
+        </form>
 {% else %}
 <h2> А вопросов то и нет =( </h2>
 {% endif %}

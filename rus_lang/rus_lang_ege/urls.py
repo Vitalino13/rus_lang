@@ -15,6 +15,6 @@ urlpatterns = [
         TestPageList.as_view(),
         name="question_page"
         ),
-    path('<int:question_id>/vote/', vote, name='vote'),
+    path('test/<int:test_id>/vote/', vote, name='vote'),
 
 ]

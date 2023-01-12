@@ -1,6 +1,7 @@
 from django.views.generic import ListView, FormView
 from django.shortcuts import get_object_or_404, render
 from .models import Level, Test, Question, Answer
+from pprint import pprint
 
 
 class IndexPageList(ListView):
@@ -27,21 +28,15 @@ class TestPageList(ListView):
         return Question.objects.filter(test__id=self.kwargs['test_id'])
 
 
-def vote(request, question_id):
-	# print(request.POST['choice'])
-	question = get_object_or_404(Question, pk=question_id)
-	try:
-		selected_choice = question.choice_set.get(pk=request.POST['choice'])
-	except (KeyError, Choice.DoesNotExist):
-		# Redisplay the question voting form.
-		return render(request, 'polls/detail.html', {
-			'question': question,
-			'error_message': "You didn't select a choice.",
-		})
-	else:
-		selected_choice.votes += 1
-		selected_choice.save()
-		# Always return an HttpResponseRedirect after successfully dealing
-		# with POST data. This prevents data from being posted twice if a
-		# user hits the Back button.
-		return HttpResponseRedirect(reverse('polls:results', args=(question.id, )))
+def vote(request, test_id):
+    list_of_question = [q.id for q in Question.objects.filter(test=test_id)]
+    answers = {}
+    question = Question.objects.get(id=list_of_question[0]).answer_set.all()
+    for ans in question:
+        ans.is_right
+    print(list_of_question)
+    answer = dict(request.POST)
+    del answer['csrfmiddlewaretoken']
+    print(answer)
+    return render(request,
+                  "rus_lang_ege/list_of_question.html")
